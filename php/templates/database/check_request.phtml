@@ -1,0 +1,237 @@
+<?php
+    require_once $_SERVER["DOCUMENT_ROOT"] . '/modules/UserData.php';
+    $user = new UserData( ['eid' => $usr['user']], $db);
+
+    $access = $user->getaccess();
+    $request = $user->getRequest();
+    $active = $user->getActiveRequest();
+
+    if($access['status1']==1 & $access['status2'] == 1) {
+        $request['trainings'] = 1;
+    } else {
+        $request['trainings'] = 0;
+    }
+?>
+
+<main>
+    <article>
+        <table class='request' align="center">
+            <tbody>
+                <section>
+                    <tr>
+                        <td>
+                            <label for="namer">Name of the requester:</label>
+                            <input type="text" name="name" value="<?= $access['name'] ?>" disabled="disabled" />
+                        </td>
+                        <td rowspan='4'>
+                        <?php
+                            require_once '/var/www/html/modules/Active.php';
+                            $active_request_obj = new ActiveRequests($active);
+                            $active_request_obj->displayActiveRequest(true);
+                        ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="bid">BID:</label>
+                            <input id='bid' type="text" name="bid" maxlength="4" size="4" value="<?= $request['bid'] ?>" disabled="disabled" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="eid">Employee ID:</label>
+                            <input type="text" name="eid" size="8" value="<?= $access['eid'] ?>" disabled="disabled"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="bsid">BSID:</label>
+                            <input id='bsid' type="text" name="bsid" maxlength="5" size="5" value="<?= $request['bsid'] ?>" disabled="disabled" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan='2'>
+                            <?php if (!empty($access['comments']))
+                                echo '<p class="colorBlue">access system comment to this user: '. $access['comments'] . '</p>';
+                            ?>
+                        </td>
+                    </tr>
+                </section>
+                <section>
+                    <tr>
+                    </tr>
+                    <tr>
+                        <td class='important' colspan='2'>
+                            <input type="checkbox" name="training_attendance" value="<?= $request['training_attendance'] ?>" disabled="disabled" />
+                            <label for="training_attendance">
+                                User was present at the initial training.
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                            <td class='important'>
+                                <input  type="checkbox" name="ohs" value="<?= $request['ohs'] ?>" disabled="disabled" />
+                                <label for="ohs">
+                                    I confirm I have read all requirements <a href="https://ch.mathworks.com/help/matlab/ref/filter.html#buagwwg-2" target="_blank">MATLAB instructions </a>
+                                </label>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class='important' colspan='2'>
+                            <input  type="checkbox" name="medical" value="<?= $request['medical'] ?>" disabled="disabled" />
+                            <label for="medical">
+                                User is not aware of any medical restrictions regarding his entry into the rooms/buildings.
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class='important' colspan='2'>
+                            <input type="checkbox" name="trainings" value="<?= $request['trainings'] ?>" disabled="disabled" />
+                            <label for="trainings" >
+                                User has completed the following trainings:
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan='2'>
+                            <?php
+                                require_once '/var/www/html/modules/Certificate.php';
+                                $certificate_obj = new Certificate($access);
+                                $certificate_obj->displayCertificate();
+                            ?> 
+                        </td>
+                    </tr>
+                </section>
+                <section>
+                    <tr>
+                        <td colspan='2'>
+                            <input type="checkbox" id="building3" name="building3" value="<?= $request['building3'] ?>" disabled="disabled"/>
+                            <label for="building3" class='colorGreen'>
+                            building3
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan='2'>
+                            <input type="checkbox" id="building2" name="building2" value="<?= $request['building2'] ?>" disabled="disabled" />
+                            <label for="building2" class='colorYellow'>
+                            building2
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan='2'>
+                            <input type="checkbox" id="building1" name="building1" value="<?= $request['building1'] ?>" disabled="disabled" />
+                            <label for="building1" class='colorOrange'>
+                            building1
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan='2'>
+                            <input type="checkbox" id="room4" name="room4" value="<?= $request['room4'] ?>" disabled="disabled" />
+                            <label for="room4" class='colorOrange'>room4</label>
+                            laboratory
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan='2'>
+                            <textarea  placeholder="N/A" name="room4_justification" rows="4" cols="80" disabled="disabled"><?= $request['room4_justification'] ?></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class='paddingTop' colspan='2'>
+                            <input type="checkbox" id="room3" name="room3" value="<?= $request['room3'] ?>" disabled="disabled" />
+                            <label for="room3" class='colorBlue'>room3</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan='2'>
+                            <textarea placeholder="N/A" name="room3_justification" rows="4" cols="80" disabled="disabled"><?= $request['room3_justification'] ?></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan='2'>
+                            <input type="checkbox" id="room2" name="room2" value="<?= $request['room2'] ?>" disabled="disabled"/>
+                            <label for="room2" class='colorRed'>room2</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan='2'>
+                            <textarea placeholder="N/A" name="room2_justification" rows="4" cols="80" disabled="disabled"><?= $request['room2_justification'] ?></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan='2'>
+                            <input type="checkbox" id="room1" name="room1" value="<?= $request['room1'] ?>" disabled="disabled" />
+                            <label for="room1" class='colorGray'>room1</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan='2'>
+                            <textarea placeholder="N/A" name="room1_justification" rows="4" cols="80" disabled="disabled" ><?= $request['room1_justification'] ?></textarea>
+                        </td>
+                    </tr>
+
+                </section>
+            </tbody>
+
+            <script>
+                <?php
+                if (isset($_SESSION['review_alert'])) {
+                    echo 'alertBox("'.$_SESSION['review_alert'].'")';
+                    unset($_SESSION['review_alert']);
+                }
+                ?>
+
+                window.onload = ()=> {
+                    var inputs = document.getElementsByTagName('input');
+                    var textareas = document.getElementsByTagName('textarea');
+                    
+                    for (let i = 0; i < inputs.length; i++) {
+                        if(inputs[i].type == 'checkbox'){
+                            if (inputs[i].value == true) {
+                                inputs[i].checked = true;
+                            } else {
+                                inputs[i].checked = false;
+                            }
+
+                            inputs[i].onclick = () => {
+                                if (inputs[i].checked) {
+                                    inputs[i].value = true;
+                                } else {
+                                    inputs[i].value = false;
+                                }
+                            }     
+                        }
+                    }
+                }
+            </script>
+            <tfood>
+                <form action='./request/check?user=<?= $usr['user'] ?>' method="post">
+                    <tr>
+                        <td class='paddingTop' colspan='2'>
+                            <label for="<?= $comment_name ?>" class='colorRed' >
+                                <?= $comment_title ?>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan='2'>
+                            <textarea  placeholder="Post your comment here. It will be displayed to the user when you click deny or block." name="<?= $comment_name ?>" rows="4" cols="80"><?= $request[$comment_name] ?></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class='paddingTop' colspan='2'>
+                            <button class='button' type="submit" name="accept">Accept</button>
+                            <button class='button' type="save" name="save">Save</button>
+                            <button class='button' type="submit" name="deny" onclick="return confirm('Are you sure you want to deny this request? (Leave a comment for the user before denying the request)')">Deny</button>
+                            <button class='button' type="submit" name="block" onclick="return confirm('Are you sure you want to block this user from accessing the laboratories? (The user will not be able to submit the request again)')">Block</button>
+                        </td>
+                    </tr>
+                </form>
+            </tfood>
+        </table>
+    </article>
+</main>
+

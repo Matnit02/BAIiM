@@ -1,0 +1,125 @@
+
+<script type="text/javascript" language="javascript">
+    var columnsInfo = [
+        {
+            'data': 'eid',
+            'render': function (eid) {
+                return '<button class="btn" onclick="window.open(\'/manager/review/request?user=' + eid + '\', \'_self\')"><span class="material-icons">search</span></button>';
+            },
+            'sortable': false,
+        },
+        { 'data': 'eid' },
+        { 'data': 'name' },
+        { 'data': 'login' },
+        { 'data': 'email' },
+        { 'data': 'comments' },
+        { 'data': 'manager_comment' },
+        { 'data': 'bid' },
+        { 'data': 'bsid' },
+        { 'data': 'request_date' },
+        { 'data': 'training_date1' },
+        { 'data': 'training_date2' },
+        { 'data': 'building3' },
+        { 'data': 'building2' },
+        { 'data': 'building1' },
+        { 'data': 'room4' },
+        { 'data': 'room3' },
+        { 'data': 'room2' },
+        { 'data': 'room1' }
+    ];
+    var mycoldef = [
+
+        {
+            targets: [12, 13, 14, 15, 16, 17, 18],
+            class:'choose',
+            'render': function (data) {
+                if (data)
+                    return '<span class="material-icons colorGreen">done</span>';
+                else
+                    return '<span class="material-icons colorRed">close</span>';
+            },
+            "searchable": false,
+        },
+        {
+            targets: [5, 6],
+            'render': function(data){
+                if(data)
+                    return '<i>' + data + '</i>';
+                else
+                    return '';
+            }
+        },
+        {
+            targets: [0],
+            class: 'button',
+            "searchable": false,
+        },
+        {
+            targets: '_all',
+            visible: true
+        }
+    ];
+</script>
+<main class="box">
+    <article class='panel panel-default'>
+        <div id='showHideIndicators' class="panel-heading">
+            <b>Show/Hidde columns:</b><br/>
+        </div>
+        <div class='panel-heading'>This table lists all your employees waiting for approval. Click the "Verify" button to check and decide on the employee's request.<br>
+        <small class="form-text text-muted">Note: You can hover over the column name for more details.</small></div>
+        <div class='panel-body'>
+            <div class='table-responsive'>
+                <table id="content_table"  class='table table-borderoom2 table-striped'>
+                    <thead>
+                        <tr>
+                            <th>Verify</th>
+                            <th>Employee ID</th>
+                            <th>Name</th>
+                            <th>Login</th>
+                            <th>Email</th>
+                            <th>Comments</th>
+                            <th>Manager comments</th>
+                            <th>BID</th>
+                            <th>BSID</th>
+                            <th>Request date</th>
+                            <th>training1 date</th>
+                            <th>training2 date</th>                            
+                            <th>building3</th>
+                            <th>building2</th>
+                            <th>building1</th>
+                            <th>room4</th>
+                            <th>room3</th>
+                            <th>room2</th>
+                            <th>room1</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Verify</th>
+                            <th>*Employee ID</th>
+                            <th>*Name</th>
+                            <th>*Login</th>
+                            <th>*Email</th>
+                            <th>*Comments</th>
+                            <th>*Manager comments</th>
+                            <th>*BID</th>
+                            <th>*BSID</th>
+                            <th>*Requestd date</th>
+                            <th>*training1 date</th>
+                            <th>*training2 date</th>
+                            
+                            <th>~building3</th>
+                            <th>~building2</th>
+                            <th>~building1</th>
+                            <th>~room4</th>
+                            <th>~room3</th>
+                            <th>~room2</th>
+                            <th>~room1</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </article>
+</main>
+

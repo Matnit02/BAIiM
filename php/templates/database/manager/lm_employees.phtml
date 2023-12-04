@@ -1,0 +1,441 @@
+
+<script type="text/javascript" language="javascript">
+    var columnsInfo = [
+        {
+            'data': 'eid',
+            'render': function (eid, type, row) {
+                if (row['st'] === 3){
+                    return '<button class="btn" value="'+eid+'" onclick="lockingUser(' + eid + ')"><span class="material-icons" title="Unblock user from sending request">lock_open</span></button>';
+                } else if (row['st'] === null){
+                    return '<i class="colorGray" title="This user do not send request yet.">N/A</i>';
+                } else {
+                    return '<button class="btn" value="'+eid+'" onclick="lockingUser(' + eid + ')"><span class="material-icons" title="Block user from sending request">lock</span></button>';
+                }
+            },
+            'sortable': false,
+        },
+        {
+            'data': 'eid',
+            'render': function (eid, type, row) {
+                return "<input type='checkbox' name='delegation' class='big-checkbox' value='" + eid + "' data-delegated-to-you='" + row['delegated_to_you'] + "' />"
+            },
+            'sortable': false,
+        },
+        { 'data': 'eid' },
+        { 'data': 'name' },
+        { 'data': 'login' },
+        { 'data': 'email' },
+        {
+            'data': 'delegated_to_you',
+            'render': function (delegated_to_you) {
+                if (delegated_to_you)
+                    return '<span class="material-icons colorGreen">done</span>';
+                else
+                    return '<span class="material-icons colorRed">close</span>';
+            }
+        },
+        {
+            'data': 'delegated_manager_email',
+            'render': function (delegated_manager_email, type, row) {
+                if (row['delegated_to_you']) {
+                    return delegated_manager_email
+                } else {
+                    return '<span class="colorGray">N/A</span>';
+                }
+
+            }
+        },
+        {
+            'data': 'delegated_by_you',
+            'render': function (delegated_by_you, type, row) {
+                if (!row['delegated_to_you']) {
+                    if (delegated_by_you)
+                        return '<span class="material-icons colorGreen">done</span>';
+                    else
+                        return '<span class="material-icons colorRed">close</span>';
+                } else {
+                    return '<span class="colorGray">N/A</span>';
+                }
+
+            }
+        },
+        {
+            'data': 'delegated_to',
+            'render': function (delegated_to, type, row) {
+                if (!row['delegated_to_you']) {
+                    return delegated_to;
+                } else {
+                    return '<span class="colorGray">N/A</span>';
+                }
+
+            }
+        },
+        { 'data': 'expire_date' },
+        { 'data': 'building3' },
+        { 'data': 'building2' },
+        { 'data': 'building1' },
+        { 'data': 'room4' },
+        { 'data': 'room3' },
+        { 'data': 'room2' },
+        { 'data': 'room1' },
+        { 
+            'data': 'st',
+        },
+        {
+            'data': 'status',
+        },
+    ];
+    var mycoldef = [
+        {
+            targets: [11,12,13,14,15,16,17],
+            class:'choose',
+            'render': function (data) {
+                if (data)
+                    return '<span class="material-icons colorGreen">done</span>';
+                else
+                    return '<span class="material-icons colorRed">close</span>';
+            },
+            "searchable": false,
+        },
+        {
+            targets: [0, 1],
+            class: 'button',
+            "searchable": false,
+        },
+        {
+            targets: '_all',
+            visible: true
+        }
+    ];
+</script>
+<main class="box">
+    <article class='panel panel-default'>
+        <div id='showHideIndicators' class="panel-heading">
+            <b>Show/Hidde columns:</b><br/>
+        </div>
+        <div class='panel-heading'>This table lists all your employees and employees posted to you by other managers and their approved access.
+
+            <small class="form-text text-muted">Note: You can hover over the column name for more details.</small></div>
+        <div class='panel-body'>
+            <div class='table-responsive'>
+                <table id="content_table"  class='table table-borderoom2 table-striped'>
+                    <thead>
+                        <tr>
+                            <th>Lock/Unlock request</th>
+                            <th>Check</th>
+                            <th>Employee ID</th>
+                            <th>Name</th>
+                            <th>Login</th>
+                            <th>Email</th>
+                            <th>Delegated to you</th>
+                            <th>Delegated by</th>
+                            <th>Delegated by you</th>
+                            <th>Delegated to</th>
+                            <th>Expiration date</th>
+                            <th>building3</th>
+                            <th>building2</th>
+                            <th>building1</th>
+                            <th>room4</th>
+                            <th>room3</th>
+                            <th>room2</th>
+                            <th>room1</th>
+                            <th>Request status</th>
+                            <th>Active status</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Lock/Unlock request</th>
+                            <th>Check</th>
+                            <th>*Employee ID</th>
+                            <th>*Name</th>
+                            <th>*Login</th>
+                            <th>*Email</th>
+                            <th>~Delegated to you</th>
+                            <th>*Delegated by</th>
+                            <th>~Delegated by you</th>
+                            <th>*Delegated to</th>
+                            <th>*Expiration date</th>
+                            <th>~building3</th>
+                            <th>~building2</th>
+                            <th>~building1</th>
+                            <th>~room4</th>
+                            <th>~room3</th>
+                            <th>~room2</th>
+                            <th>~room1</th>
+                            <th>Request status</th>
+                            <th>Active status</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <div class='panel-heading'>
+            <table align="center">
+                <thead>
+                    <tr>
+                        <td>
+                            <div class='panel-heading bg-room1 border'>
+                                <h3>Individual delegation</h3>
+                            </div>
+                            
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                        $access_manager_select = $db->prepare('SELECT access.eid, name, email, login, delegated_id, in_use FROM access LEFT JOIN autodelegation ON access.eid = autodelegation.eid WHERE rights LIKE "%m%" ORDER BY in_use');
+                        $access_manager_select->execute();
+                        $data = $access_manager_select->fetchAll();
+                        $this_manager = [];
+                    ?>
+                    <tr>
+                        <td class='paddingTop'>
+                            <button id='select_all'  class='btn'>Select all</button>
+                            <button id='select_deleagted_to_you' class='btn'>Select users delegated to you</button>
+                            <button id='select_your_employees' class='btn'>Select your employees</button>
+                            <button id='clear' class='btn'>Clear selection</button>
+                            <small class="form-text text-muted">Note: If you change page, users will no longer be selected</small>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class='paddingTop'>
+                            Select users then delegate them to another manager.<br />
+                            Choose the manager from the list below:
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class='paddingTop'>
+                            <select class='form-control marginBottom' name='delegated_manager' id="delegated_manager_id">
+                                <option value="" disabled>Manager List</option>
+                                <option value="" disabled>------</option>
+                                <?php
+                                    foreach ($data as $row) {
+                                        if ($_SESSION['data']['eid'] != $row['eid']) {
+                                            echo '<option value="' . $row['eid'] . '" >' . $row['name']. ' - ' . $row['login']. ' - ' . $row['email'] . ' - ' . $row['eid'] . '</option>';
+                                        }else {
+                                            $this_manager = [
+                                                'in_use' => $row['in_use'],
+                                                'delegated_id' => $row['delegated_id'],
+                                            ];
+                                        }
+                                    }
+                                ?>
+                            </select>
+                            <button value='delgate' class='btn submit_delegation'>Delegate users</button>
+                            <button value='undelegate' class='btn submit_delegation'>Undelegate users</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class='paddingTop'>
+                            If someone has delegated users to you and you cannot take care of them, select them and then click dismiss.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button value='dismiss' class='btn submit_delegation'>Dismiss users</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class='panel-heading'>
+            <table align="center">
+                <thead>
+                    <tr>
+                        <td>
+                            <div class='panel-heading bg-room1 border'>
+                                <h3>Auto delegation
+                                    <span <?= $this_manager['in_use'] ? '' : 'style="display:none"' ?> class="badge badge-success autodelegate">ON</span>
+                                    <span <?= $this_manager['in_use'] ? 'style="display:none"' : '' ?> class="badge badge-danger autodelegate">OFF</span>
+                                </h3>
+                            </div>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class='paddingTop'>
+                            Select a manager to which all new requests of your employees will be automatically assigned.<br />
+                            Choose the manager from the list below:
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class='paddingTop'>
+                            <select class='form-control marginBottom' name='delegated_manager' id="auto_delegated_manager_id" >
+                                <option value="" disabled>Manager List</option>
+                                <option value="" disabled>------</option>
+                                <?php
+                                    
+                                    foreach ($data as $row) {
+                                        if ($_SESSION['data']['eid'] != $row['eid']) {
+                                            if($this_manager['delegated_id'] == $row['eid']){
+                                                echo '<option value="' . $row['eid'] . '" selected>' . $row['name']. ' - ' . $row['login']. ' - ' . $row['email'] . ' - ' . $row['eid'] .' | -=-=-=- | AUTO DELEGATION ' . ($row['in_use'] ? 'ON (this user is probably unavailable)' : 'OFF'). '</option>';
+                                                $this_manager['delegated_name'] = $row['name'];
+                                            } else {
+                                                echo '<option value="' . $row['eid'] . '" >' . $row['name']. ' - ' . $row['login']. ' - ' . $row['email'] . ' - ' . $row['eid'] .' | -=-=-=- | AUTO DELEGATION ' . ($row['in_use'] ? 'ON (this user is probably unavailable)' : 'OFF'). '</option>';
+                                            }
+                                        }
+                                    }
+                                ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button value='saveAutoDelegation' class='btn autodelegate' <?= ($this_manager['in_use']) ? '' : 'style="display:none;"' ?> >Save</button>
+                            <button value='stopAutoDelegation' class='btn autodelegate' <?= ($this_manager['in_use']) ? '' : 'style="display:none;"' ?> >Stop</button>
+                            <span class="badge badge-pill badge-info autodelegate" <?= ($this_manager['in_use']) ? '' : 'style="display:none;"' ?>  ><?= $this_manager['delegated_name'] ?></span>
+                            <button value='startAutoDelegation' class='btn autodelegate' <?= ($this_manager['in_use']) ? 'style="display:none;"' : '' ?>>Start</button> 
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </article>
+</main>
+<script>
+    $(document).ready(function () {
+        $(".submit_delegation").click(function(e) {
+            e.preventDefault();
+            var eid_list = [];
+            $('input.big-checkbox').each(function(){
+                
+                if ($(this).prop('checked') == 1)
+                    eid_list.push($(this).val());
+                
+            });
+            if (eid_list.length != 0) {
+                $.ajax({
+                    type: "POST",
+                    url: "/manager/employees/review/delegate",
+                    data: { 
+                        submit: $(this).val(),
+                        eid_string: eid_list.join(';'),
+                        delegated_manager_id: $('#delegated_manager_id').val(),
+                    },
+                    success: function(result) {
+                        if(result){
+                            successBox(result);
+                            $('#content_table').DataTable().ajax.reload();
+                        }
+                    },
+                    error: function(result) {
+                        errorBox('Found error, please try again.');
+                    }
+                });
+            }
+        });
+
+        $('#clear').click(function(){
+            $('input.big-checkbox').each(function(){
+                $(this).prop('checked', false);
+            })
+        });
+
+        $('#select_all').click(function(){
+            $('input.big-checkbox').each(function(){
+                $(this).prop('checked', true);
+            })
+        });
+        
+        $('#select_deleagted_to_you').click(function(){
+            
+            $('input.big-checkbox').each(function(){
+                if ($(this).attr('data-delegated-to-you') == 'true')
+                    $(this).prop('checked', true);
+                else
+                    $(this).prop('checked', false);
+            })
+        });
+
+        $('#select_your_employees').click(function(){
+            $('input.big-checkbox').each(function(){
+                if ($(this).attr('data-delegated-to-you') == 'false')
+                    $(this).prop('checked', true);
+                else
+                    $(this).prop('checked', false);
+            })
+        });
+
+        $(".autodelegate").click(function(e) {
+            e.preventDefault();
+            let btn = $(this);
+            if (btn.val() != ''){
+                if(btn.val() == 'stopAutoDelegation' || (confirm('Automatic delegation will make the delegated manager receive new requests created by your employees.'))){
+                    $.ajax({
+                        type: "POST",
+                        url: "/manager/employees/review/logic",
+                        data: { 
+                            submit: btn.val(),
+                            delegated_manager_id: $('#auto_delegated_manager_id').val(),
+                        },
+                        success: function(result) {
+                            if (btn.val() == 'stopAutoDelegation'){
+                                $('.badge').text('OFF')
+                                successBox('Automatic delegation disabled.');
+                            } else if (btn.val() == 'startAutoDelegation'){
+                                successBox('Automatic delegation enabled.');
+                                $('.badge').text('ON')
+                                $('.badge.badge-pill').text(result)
+                            }
+                            if (btn.val() != 'saveAutoDelegation'){
+                                $('.autodelegate').each(function(){
+                                    if( $(this).css("display") == "none" ){
+                                        $(this).show();
+                                    } else {
+                                        $(this).hide();
+                                    }
+                                });
+                            } else {
+                                successBox('Save complited.');
+                                $('.badge.badge-pill').text(result)
+                            }
+
+                        },
+                        error: function(result) {
+                            errorBox('Found error, please try again.');
+                        }
+                    });
+                }
+            }
+
+        });
+    });
+
+    $
+
+    function lockingUser(eid){
+        if(confirm('This action sends an email to the user.')){
+            $.ajax({
+                type: "POST",
+                url: "/manager/employees/review/logic",
+                data: { 
+                    submit: 'lockingUser',
+                    user_eid: eid,
+                },
+                success: function(result) {
+                    if(result){
+                        $('#content_table tbody tr').each(function () {
+                            let tr = $(this);
+                            let button = tr.children().eq(0).children()
+                            if (button.val() == eid){
+                                if (result == 'lock'){
+                                    successBox('User succesfully locked!');
+                                    button.html('<span class="material-icons" title="Unblock user from sending request">lock_open</span>');
+                                } else if (result == 'unlock') {
+                                    successBox('User succesfully unlocked!');
+                                    button.html('<span class="material-icons" title="Block user from sending request">lock</span>');
+                                }
+                            }
+                        });
+                    }
+                },
+                error: function(result) {
+                    errorBox('Found error, please try again.');
+                }
+            });
+        }
+    }
+</script>
+

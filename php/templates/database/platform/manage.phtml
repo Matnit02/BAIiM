@@ -1,0 +1,146 @@
+<style>
+    table#settings_table>thead>tr {
+        background-color: #ccdbf5;
+    }
+    table#settings_table>thead>tr:hover {
+        background-color: #a5c0ee;
+        cursor: pointer;
+    }
+
+    .pattern_block{
+        padding: .5em;
+        margin: .5em;
+        min-width: 600px;
+        background-color: room1;
+
+    }
+</style>
+<script>
+
+    var activePatterns = {
+        'email_pattern': <?= $apat['email_pattern'] ?>,
+        'setting_pattern': <?= $apat['id'] ?>,
+    };
+    
+    <?php require_once 'manage.js' ?>
+
+</script>
+<main>
+    <!-- Pltaform settings -->
+    <?php if (!$_SESSION['g_mode']) : ?>
+
+    <article>
+        <table class='userCredentials' align="center">
+            <thead>
+                <tr>
+                    <th colspan='5'>Platform manage active pattern</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan='3'>
+                        <label for="id">Platform manage active pattern</label>
+                        <select id='platform_setting' name="id" class='button'>
+                            <option id='new_platform_setting' value="" data-name="" data-email_pattern="1"
+                                data-lab_pattern="" data-description="">NEW</option>
+                            <option value="" disabled>------</option>
+
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="name">Name:</label>
+                        <input id='setting_pattern_name' type="text" name='name' maxlength="25" requiroom2>
+                    </td>
+                    <td colspan='2'>
+                        <label for="description">Description:</label>
+                        <input id='setting_description' type="text" name='description' size='40'>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan='3'>
+                        <button id='save_setting' name='settings' value='save' class='button'>Save</button>
+                        <button id='new_setting' class='button'>New</button>
+                        <button id='remove_setting' name='settings' value='remove' class='button'>Remove</button>
+                        <button id='use_setting' class='button'>Use</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </article>
+    <?php endif ?>
+
+    <!-------------------
+        G_MODE SETTINGS
+    -------------------->
+    <article>
+        <table align='center'>
+            <tbody>
+                <tr>
+                    <td>
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- User specific settings -->
+        <table class='userCredentials' align="center">
+            <thead>
+                <tr>
+                    <th colspan='3'>User specific settings</th>
+                </tr>
+            </thead>
+            <form action="./manage/gmode/logic" method='POST'>
+                <tbody>
+                    <tr>
+                        <td colspan='3'>
+                            G MODE Settings -
+                            <span class='colorBlue textCenter'>
+                                <?= $_SESSION['g_mode'] ? '<span class="colorRed">You are in G MODE!</span>' : '<span class="colorGreen">You are not in G MODE!</span>' ?>
+                            </span>
+                        </td>
+                    </tr>
+
+                    <?php
+                        $g_binding = $db->prepare('SELECT bind_varible FROM g_user_bindings WHERE eid=:eid');
+                        $g_binding->bindValue(':eid',  $_SESSION['g_user_eid'], PDO::PARAM_STR);
+                        $g_binding->execute();
+
+                        $g_binding_result = $g_binding->fetch();
+                        if ($g_binding->rowCount() == 0) {
+                            $g_binding_result = [
+                                'bind_varible' => '',
+                            ];
+                        }
+                        ?>
+                    <tr>
+                        <td>
+                            <label for="bind_varible">User bind varible:</label>
+                            <input type="text" name='bind_varible' value="<?= $g_binding_result['bind_varible']?>" placeholder='Enter eid'>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan='3'>
+                            <?php if ($_SESSION['g_mode']) : ?>
+                            <button type='submit' name='g_mode' value='stop' class='button'>Stop</button>
+                            <?php else : ?>
+                            <button type='submit' name='g_mode' value='save' class='button'>Save</button>
+                            <button type='submit' name='g_mode' value='start' class='button'>Start</button>
+                            <?php endif ?>
+                        </td>
+                    </tr>
+                </tbody>
+            </form>
+        </table>
+    </article>
+</main>
+<script>
+        <?php
+    // Alert message display
+    if (isset($_SESSION['platform_manage_alert'])) {
+        echo 'alertBox("'.$_SESSION['platform_manage_alert'].'")';
+        unset($_SESSION['platform_manage_alert']);
+    }
+    ?>
+</script>

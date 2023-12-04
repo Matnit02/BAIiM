@@ -1,0 +1,59 @@
+<script>
+  $( function() {
+    $( "#datepicker" ).datepicker({
+      minDate: "-3Y",
+      maxDate: "+1D",
+      changeMonth: true,
+      changeYear: true,
+      firstDay: 1,
+      dateFormat: "yy-mm-dd",
+      monthnamesShort: [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ]
+    });
+  } );
+
+  <?php
+  // Dialog box
+  if (isset($_SESSION['upload_alert'])) {
+    echo 'alert("' . $_SESSION['upload_alert'] . '")';
+    unset($_SESSION['upload_alert']);
+  }
+  ?>
+</script>
+<article>
+    <table class='userCredentials' align="center">
+      <thead>
+        <tr>
+          <th>
+            Course Name
+          </th>
+          <th>
+            Training Completion Date
+          </th>
+            <?= '' ?>
+          <th>
+              Upload
+          </th>
+        </tr>
+      </thead>
+        <tbody>
+          <form action='<?= $cert_name ?>/send' method="post" enctype="multipart/form-data">
+            <tr>
+              <td>
+                <?= $cert_name ?>
+              </td>
+              <td>
+                <input name="date" type="text" id="datepicker">
+              </td>
+              <td>
+                <input type="file" name="myfile" class='button'>
+              </td>
+            </tr>
+            <tr>
+              <td colspan='3'>
+                <button type="submit" name="submit" class='button'>Submit</button>
+              </td>
+            </tr>
+          </form>
+      </tbody>
+    </table>
+</article>

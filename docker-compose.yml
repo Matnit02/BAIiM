@@ -1,0 +1,65 @@
+version: "3"
+services:
+  db:
+    hostname: ma0-tdi-mariadb
+    build:
+      context: .
+      dockerfile: .docker/mariadb/Dockerfile
+    image: mariadb
+    container_name: ma0-tdi-mariadb
+    networks:
+      - backend
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_520_ci
+    environment:
+      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_DATABASE: tdi
+      MYSQL_USER: tdi
+      MYSQL_PASSWORD: tdi
+    ports:
+      - 7001:3306
+    volumes:
+      - ./.docker/mariadb/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./.docker/mariadb/init.sql:/sql/init.sql
+
+  web:
+    hostname: ma0-tdi-php-apache
+    build:
+      context: .
+      dockerfile: .docker/php/Dockerfile
+    image: ma0-tdi-php-apache:1.0
+    container_name: ma0-tdi-php-apache
+    networks:
+      - backend
+      - frontend
+    depends_on:
+      - db
+    volumes:
+      - ./.docker/php/vhost.conf:/etc/apache2/sites-available/000-default.conf
+      - ./.docker/php/timezone.ini:/usr/local/etc/php/conf.d/timezone.ini
+      - ./.docker/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+      - ./php/:/var/www/html
+      - ./.docker/certificates:/var/www/certificates
+    ports:
+      - 7000:80
+
+  phpmyadmin:
+    hostname: ma0-tdi-phpmyadmin
+    container_name: ma0-tdi-phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    environment:
+      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_USER: tdi
+      MYSQL_PASSWORD: tdi
+    networks:
+      - backend
+      - frontend
+    links:
+      - db:db
+    depends_on:
+      - db
+    ports:
+      - 7002:80
+
+networks:
+  backend:
+  frontend:

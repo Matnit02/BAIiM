@@ -1,0 +1,304 @@
+<main>
+  <!-- User croom2entials panel -->
+  <article>
+    <table class='userCredentials' align="center">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Employee ID</th>
+          <th>Login</th>
+          <th>Email</th>
+          <th>Manager</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td><?= $lab['name'] ?></td>
+          <td><?= $lab['eid'] ?></td>
+          <td><?= $lab['login'] ?></td>
+          <td><?= $lab['email'] ?></td>
+          <td><?= $lab['manager_name'] ?></td>
+        </tr>
+      </tbody>
+    </table>
+  </article>
+
+  <?php if ($lab['canUploadCert']) :
+    // Only can be seen when you can upload certificate
+  ?>
+    <article>
+      <table align='center'>
+        <tbody>
+          <tr>
+            <td>
+              <p class='colorBlue textCenter'>
+                Please complete the following trainings and save your training certificate in your local disk, then upload it here.
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </article>
+  <?php endif ?>
+
+  <article>
+    <table class='userCredentials' align="center">
+      <thead>
+        <tr>
+          <th>
+            Course Name
+          </th>
+          <th>
+            Description
+          </th>
+          <th>
+            Training Status
+          </th>
+
+          <?php if ($lab['canUploadCert']) :
+            // Only can be seen when you can upload certificate
+          ?>
+            <th>
+              Update Record
+            </th>
+          <?php endif ?>
+
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>
+            <a href='https://www.youtube.com/watch?v=dQw4w9WgXcQ' target='_blank'>Building Security Awareness</a>
+          </td>
+          <td>
+          Building Security Awareness training is a comprehensive program designed to educate individuals within an organization about potential security threats and best practices to mitigate risks. This training aims to enhance the overall security posture by fostering a culture of vigilance and responsibility among employees. 
+          </td>
+
+          <?php if ($lab["status1"] == 0) :
+          ?>
+            <td>
+              <p class='colorRed'>
+                Not valid
+              </p>
+            </td>
+
+          <?php else :
+          ?>
+            <td>
+              <p class='colorGreen'>
+                Valid until: <?= $lab['status1_valid']  
+                              ?>
+              </p>
+            </td>
+          <?php endif; ?>
+
+          <?php if ($lab['canUploadCert']) :
+            // Only can be seen when you can upload certificate
+          ?>
+            <td>
+              <button class="button" onclick="window.open('/upload/cert/1', '_self')">
+                Upload...
+              </button>
+            </td>
+          <?php endif ?>
+
+        </tr>
+        <tr>
+          <td height="80">
+            <a href='https://ch.mathworks.com/help/matlab/ref/filter.html#buagwwg-2' target='_blank'>MATLAB Training for Building Access</a>
+          </td>
+          <td>
+          "MATLAB Training for Building Access" is an innovative program designed to integrate cutting-edge technology into everyday security measures. In this training, participants learn how to utilize MATLAB, a powerful numerical computing environment, to enhance access control systems in buildings. The course covers the fundamentals of MATLAB programming, focusing on applications related to security and access manageme          </td>
+
+          <?php if ($lab["status2"] == 0) :
+          ?>
+            <td>
+              <p class='colorRed'>
+                Not valid
+              </p>
+            </td>
+
+          <?php else :
+          ?>
+            <td>
+              <p class='colorGreen'>
+                Valid
+              </p>
+            </td>
+          <?php endif; ?>
+
+          <?php if ($lab['canUploadCert']) :
+          ?>
+            <td>
+              <button class="button" onclick="window.open('/upload/cert/2', '_self')">
+                Upload...
+              </button>
+            </td>
+          <?php endif ?>
+        </tr>
+        <tr>
+          <td colspan="4">
+            <?php if ($lab["status1"] == 1 && $lab["status2"] == 1) : ?>
+
+
+              <?php if ($areq['status'] != 0 && $areq['status'] != 4) : ?>
+
+                <?php if ($lab['status1_valid'] < $lab['renew_time'] && $areq['status'] == 1) : ?>
+
+                  <p class='colorOrange'>
+                    Your access is expiring. Please upload new training certificate.
+                  </p>
+
+                <?php elseif ($areq['status'] == 2) : ?>
+                  <p class='colorYellow'>
+                    Your certificates are checked by the labadmin team.
+                  </p>
+
+                <?php elseif ($areq['status'] == 3) : ?>
+                  <p class='colorRed'>
+                    Your certificate has been denied by the admin, please upload new/correct certificates by the end of <b><?= $areq['upload_cer_time'] ?></b> otherwise your access will be revoked.
+                    <?= !empty($areq['admin_comment']) ? '<br />Admin comment: <i>' . $areq['admin_comment'] . '</i>' : '' ?>
+                  </p>
+                <?php else : ?>
+                  <p class='colorGreen'>
+                    You have done all required trainings.
+                  </p>
+                <?php endif ?>
+              <?php else : ?>
+                <p class='colorGreen'>
+                  You have done all required trainings.
+                </p>
+              <?php endif ?>
+            <?php else : ?>
+              <p class='colorRed'>
+                Please complete required training courses to apply/retain the access...
+              </p>
+            <?php endif ?>
+          </td>
+        </tr>
+
+
+        <?php if ($lab["status1"] == 1 && $lab["status2"] == 1) : ?>
+          <tr>
+            <td colspan="4">
+              <?php if (($req['status'] == 0 || $req['status'] == 1) && $areq['status'] == 0) : ?>
+                <p class='colorGreen'>
+                  Now you can request for access to the laboratory.
+                </p>
+                <button class="button" onclick="window.open('./request', '_self')">
+                  Make request
+                </button>
+
+              <?php elseif (($req['status'] == 0 || $req['status'] == 1) && $areq['status'] != 0) : ?>
+                <p class='colorGreen'>
+                  Now you can change your request for access to the laboratory.
+                </p>
+                <button class="button" onclick="window.open('/request', '_self')">
+                  Change request
+                </button>
+
+              <?php elseif ($req['status'] == 2) : ?>
+                <p class='colorYellow'>
+                  Your request is awaiting verification by your manger.
+                </p>
+                <button class="button" onclick="window.open('/request', '_self')">
+                  Show request
+                </button>
+
+              <?php elseif ($req['status'] == 3) : ?>
+                <p class='colorRed'>
+                  Your request has been blocked by your manager! Unfortunately, you cannot resend the request.
+                  <?= !empty($req['manager_comment']) ? '<br />Your manager comment: <i>' . $req['manager_comment'] . '</i>' : '' ?>
+                </p>
+                <button class="button" onclick="window.open('/request', '_self')">
+                  Show request
+                </button>
+
+              <?php elseif ($req['status'] == 4) : ?>
+                <p class='colorOrange'>
+                  Your request has been denied by your manager! You can change the request and resend it for verification.
+                  <?= !empty($req['manager_comment']) ? '<br />Your manager comment: <i>' . $req['manager_comment'] . '</i>' : '' ?>
+                </p>
+                <button class="button" onclick="window.open('/request', '_self')">
+                  Show request
+                </button>
+
+              <?php elseif ($req['status'] == 5) : ?>
+                <p class='colorYellow'>
+                  Your request is awaiting verification by admin.
+                </p>
+                <button class="button" onclick="window.open('/request', '_self')">
+                  Show request
+                </button>
+
+              <?php elseif ($req['status'] == 6) : ?>
+                <p class='colorRed'>
+                  Your request has been blocked by admin! Unfortunately, you cannot resend the request.
+                  <?= !empty($req['admin_comment']) ? '<br />Admin team comment: <i>' . $req['admin_comment'] . '</i>' : '' ?>
+                </p>
+                <button class="button" onclick="window.open('/request', '_self')">
+                  Show request
+                </button>
+
+              <?php elseif ($req['status'] == 7) : ?>
+                <p class='colorOrange'>
+                  Your request has been denied by admin! You can change the request and resend it for verification.
+                  <?= !empty($req['admin_comment']) ? '<br />Admin comment: <i>' . $req['admin_comment'] . '</i>' : '' ?>
+                </p>
+                <button class="button" onclick="window.open('/request', '_self')">
+                  Show request
+                </button>
+
+              <?php elseif ($req['status'] == 8) : ?>
+                <p class='colorGreen'>
+                  Your request has been accepted by everyone. You will soon received access to the buildings. SUCCESS!!! <br />
+
+                  <?php
+
+                    $uid = generateUniqueID();
+                    echo "Unique ID: $uid";
+                    
+                  ?>
+
+                </p>
+                <button class="button" onclick="window.open('/request', '_self')">
+                  Show request
+                </button>
+              <?php endif ?>
+            </td>
+          </tr>
+        <?php endif ?>
+
+        <?php if ($req['status'] != 6 && $req['status'] != 3 && $req['status'] != 1 && $req['status'] != 0): ?>
+          <tr>
+            <td colspan='4'>
+              <p class='colorGray'>
+                You can change the request and resend it for verification.
+              </p>
+              <button class="button" onclick="cancelRequest()">
+                Change request
+              </button>
+            </td>
+          </tr>
+          <script>
+            function cancelRequest() {
+              if (confirm('If you confirm clicking this button your current request evaluation process will be reset!')) {
+                window.open('/request/cancel', '_self');
+              }
+            }
+          </script>
+        <?php endif ?>
+
+      </tbody>
+    </table>
+  </article>
+  <article>
+    <?php
+        require_once '/var/www/html/modules/Active.php';
+        $active_request_obj = new ActiveRequests($areq);
+        $active_request_obj->displayActiveRequest(false);
+      ?>
+  </article>
+</main>

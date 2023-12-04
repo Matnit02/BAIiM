@@ -1,0 +1,217 @@
+<?php
+$wirte = preg_match('(w)', $lab['rights']);
+?>
+<script type="text/javascript" language="javascript">
+    var columnsInfo = [{
+            'data': 'eid',
+            'render': function(eid, a, b) {
+                return '<button value="' + eid + '" class="revoke_access btn" onclick="revokeAccess(\'' + eid + '\')"><span class="material-icons">delete</span></button>';
+            },
+            'sortable': false,
+        },
+        {
+            'data': 'eid'
+        },
+        {
+            'data': 'name'
+        },
+        {
+            'data': 'login'
+        },
+        {
+            'data': 'email'
+        },
+        {
+            'data': 'comments'
+        },
+        {
+            'data': 'manager_id'
+        },
+        {
+            'data': 'delegated_manager_id'
+        },
+        {
+            'data': 'rights'
+        },
+        {
+            'data': 'expiration_date',
+            'render': function(date){
+                const epx_date = new Date(Date.parse(date));
+                epx_date.setFullYear(epx_date.getFullYear() + 3);
+                return epx_date.getFullYear() + '-' + (epx_date.getMonth() + 1).toString().padStart(2, '0') + '-' + epx_date.getDate().toString().padStart(2, '0');
+            }
+        },
+        {
+            'data': 'status',
+        },
+        {
+            'data': 'bid'
+        },
+        {
+            'data': 'bsid'
+        },
+        {
+            'data': 'admin_comment'
+        },
+        {
+            'data': 'building3'
+        },
+        {
+            'data': 'building2'
+        },
+        {
+            'data': 'building1'
+        },
+        {
+            'data': 'room4'
+        },
+        {
+            'data': 'room3'
+        },
+        {
+            'data': 'room2'
+        },
+        {
+            'data': 'room1'
+        },
+        {
+            'data': 'activaiton_day'
+        },
+        {
+            'data': 'upload_cer_time'
+        },
+    ];
+    var mycoldef = [{
+            targets: [0, 14, 15, 16, 17, 18, 19, 20],
+            "searchable": false
+        },
+        {
+            targets: [14, 15, 16, 17, 18, 19, 20],
+            class: 'choose',
+            'render': function(data, a, b) {
+                if (data) {
+                    return '<span class="material-icons colorGreen">done</span>';
+                } else {
+                    return '<span class="material-icons colorRed">close</span>';
+                }
+            },
+        },
+        {
+            targets: [5, 13],
+            'render': function(data) {
+                if (data)
+                    return '<i>' + data + '</i>';
+                else
+                    return '';
+            }
+        },
+        {
+            targets: [0],
+            class: 'button',
+            <?= (!$wirte) ? "'visible': false" : "'visible': true" ?>,
+        },
+        {
+            targets: '_all',
+            visible: true
+        },
+    ];
+</script>
+<main class="box">
+    <article class='panel panel-default'>
+        <div id='showHideIndicators' class="panel-heading">
+            <b>Show/Hidde columns:</b><br />
+        </div>
+        <div class='panel-heading'>Users with active rights to access buildings/rooms<br>
+            <small class="form-text text-muted">Note: You can hover over the column name for more details.</small>
+        </div>
+        <div class='panel-body'>
+            <div class='table-responsive'>
+                <table id="content_table" class='table table-borderoom2 table-striped'>
+                    <thead>
+                        <tr>
+                            <th>Revoke access</th>
+                            <th>Employee ID</th>
+                            <th>Name</th>
+                            <th>Login</th>
+                            <th>Email</th>
+                            <th>Comments</th>
+                            <th>Manager ID</th>
+                            <th>Delegated manager ID</th>
+                            <th>Rights</th>
+                            <th>Expiration date</th>
+                            <th>Active status</th>
+                            <th>BID</th>
+                            <th>BSID</th>
+                            <th>admin comments</th>
+                            <th>building3</th>
+                            <th>building2</th>
+                            <th>building1</th>
+                            <th>room4</th>
+                            <th>room3</th>
+                            <th>room2</th>
+                            <th>room1</th>
+                            <th>Activaiton date</th>
+                            <th>Time to reupload certificate</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Revoke access</th>
+                            <th>*Employee ID</th>
+                            <th>*Name</th>
+                            <th>*Login</th>
+                            <th>*Email</th>
+                            <th>*Comments</th>
+                            <th>*Manager ID</th>
+                            <th>*Delegated manager ID</th>
+                            <th>*Rights</th>
+                            <th>*Expiration date</th>
+                            <th>*Active status</th>
+                            <th>*BID</th>
+                            <th>*BSID</th>
+                            <th>*admin comments</th>
+                            <th>~building3</th>
+                            <th>~building2</th>
+                            <th>~building1</th>
+                            <th>~room4</th>
+                            <th>~room3</th>
+                            <th>~room2</th>
+                            <th>~room1</th>
+                            <th>*Activaiton day</th>
+                            <th>*Time to reupload certificate</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </article>
+</main>
+<script>
+    <?php if ($wirte) : ?>
+
+        function revokeAccess(eid) {
+            if (confirm('Are you sure you want to revoke access rights to labs of this user (' + eid + ')(The user will be notified about this acction)!')) {
+                $.ajax({
+                    type: "POST",
+                    url: './review/logic',
+                    data: {
+                        user_eid: eid,
+                        logic: 'revoke_access',
+                    },
+                    success: function(result) {
+                        $('#content_table tbody tr').each(function() {
+                            id = $(this).children().eq(0).children().val();
+                            console.log(id);
+                            if (eid == id) {
+                                $(this).children().eq(0).html('<i class="colorGray">N/A</i>');
+                                return true;
+                            }
+                        });
+                        successBox('Access rights succesfuly revoked');
+
+                    },
+                });
+            }
+        }
+    <?php endif ?>
+</script>

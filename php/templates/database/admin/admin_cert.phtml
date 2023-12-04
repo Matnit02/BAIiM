@@ -1,0 +1,117 @@
+<?php
+    require_once $_SERVER["DOCUMENT_ROOT"] . '/modules/UserData.php';
+    $user = new UserData( ['eid' => $usr['user']], $db);
+
+    $access = $user->getaccess();
+    $request = $user->getRequest();
+    $active = $user->getActiveRequest();
+
+    if($access['status1']==1 & $access['status2'] == 1) {
+        $request['trainings'] = 1;
+    } else {
+        $request['trainings'] = 0;
+    }
+?>
+<main>
+    <article>
+        <table align="center">
+            <tbody>
+                <section>
+                    <tr>
+                        <td>
+                            <label for="namer">Name of the requester:</label>
+                            <input type="text" name="name" value="<?= $access['name'] ?>" disabled="disabled" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="bid">ID badge number:</label>
+                            <input id='bid' type="text" name="bid" maxlength="4" size="4" value="<?= $request['bid'] ?>" disabled="disabled" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="eid">NSN ID:</label>
+                            <input type="text" name="eid" size="8" value="<?= $access['eid'] ?>" disabled="disabled"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="bsid">Skawina badge ID:</label>
+                            <input id='bsid' type="text" name="bsid" maxlength="5" size="5" value="<?= $request['bsid'] ?>" disabled="disabled" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <?php
+                                require_once '/var/www/html/modules/Active.php';
+                                $active_request_obj = new ActiveRequests($active);
+                                $active_request_obj->displayActiveRequest(true);
+                            ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan='2'>
+                            <?php if (!empty($data['comments']))
+                                echo '<p class="colorBlue">access system comment to this user: '. $access['comments'] . '</p>';
+                            ?>
+                        </td>
+                    </tr>
+                </section>
+                <section>
+                    <tr>
+                        <td>
+                            <?php
+                                require_once '/var/www/html/modules/Certificate.php';
+                                $certificate_obj = new Certificate($access);
+                                $certificate_obj->displayCertificate();
+                            ?> 
+                        </td>
+                    </tr>
+                </section>
+                <section>
+                    <form action='./cert/check?user=<?= $usr['user'] ?>' method="post">
+                        <tr>
+                            <td class='paddingTop' colspan='2'>
+                                <label for="admin_comment" class='colorRed' >
+                                    Comment:
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan='2'>
+                                <textarea  placeholder="Post your comment here. It will be displayed to the user when you click deny or revoke." name="admin_comment" rows="4" cols="80"><?= $active['admin_comment'] ?></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class='paddingTop' colspan='2'>
+                                <button class='button' type="submit" name="accept">Accept</button>
+                                <button class='button' type="save" name="save">Save</button> ||||
+                                <button class='button' type="submit" name="deny" onclick="return confirm('Are you sure you want to reject these certificates? (Leave a comment for the user before denying the request)')">Deny</button>
+                                <select class='button' name="days">
+                                    <option value="5">5 days</option>
+                                    <option value="10">10 days</option>
+                                    <option value="15" selected>15 days</option>
+                                    <option value="30">30 days</option>
+                                    <option value="60">60 days</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </form>
+                </section>
+            </tbody>
+        </table>
+    </article>
+</main>
+<script>
+
+    // Alert message display
+    <?php
+    if (isset($_SESSION['review_labadmin_alert'])) {
+        echo 'alertBox("'.$_SESSION['review_labadmin_alert'].'")';
+        unset($_SESSION['review_labadmin_alert']);
+    }
+    ?>
+
+</script>
+

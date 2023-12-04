@@ -1,0 +1,163 @@
+<style>
+  /* Dropdown Button */
+  .dropbtn {
+            font-size: 1em;
+            background-color: #8B0000;
+            color: white;
+            padding: .75em;
+            border: none;
+            font-family: Helvetica;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+            }
+
+            /* Dropdown button on hover & focus */
+            .dropbtn:hover,
+            .dropbtn:focus {
+                background-color: #FF8C00;
+            }
+  /* The container <div> - needed to position the dropdown content */
+  .dropdown {
+    float: right;
+  }
+
+  /* Dropdown Content (Hidden by Default) */
+  .dropdown-content {
+    /* height: 27px; */
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 260px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    right: 0;
+    z-index: 1;
+    white-space: nowrap;
+  }
+
+  /* Links inside the dropdown */
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    left: 0;
+    display: relative;
+  }
+
+  /* Change color of dropdown links on hover */
+  .dropdown-content a:hover {
+    background-color: #E9967A
+  }
+
+  /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+  .show {
+    display: block;
+  }
+</style>
+<article>
+  <table class='logo' align="center">
+    <thead>
+      <tr>
+        <th style='text-align: left;' colspan='1'>
+          <img src="/storage/logo" onclick="window.open('/', '_self')" style='cursor: pointer; height:3rem'>
+        </th>
+
+        <?php if (preg_match('(l|m|g)', $lab['rights']) || $_SESSION['g_mode']) :
+          // User have 'm' or 'l' rights
+        ?>
+          <!-- Menu button div -->
+          <td colspan='9'>
+            <div class='dropdown'>
+              <button onclick="myFunction()" class="dropbtn">MENU
+              </button>
+              <div id="myDropdown" class="dropdown-content">
+                <a href="/">
+                  <span class="material-icons" style='vertical-align: text-bottom;'>home</span>
+                  Home
+                </a>
+                <?php if (preg_match('(l)', $lab['rights'])) : ?>
+                  <!-- admin access -->
+                  <a href="/admin/review">
+                    <span class="material-icons" style='vertical-align: text-bottom;'>admin_panel_settings</span>
+                    Admin requests
+                  </a>
+
+                  <a href="/database/requests/review">
+                    <span class="material-icons" style='vertical-align: text-bottom;'>app_registration</span>
+                    Requests DB
+                  </a>
+
+                  <a href="/database/active/review">
+                    <span class="material-icons" style='vertical-align: text-bottom;'>analytics</span>
+                    User Database
+                  </a>
+                <?php endif; ?>
+
+                <?php if (preg_match('(m)',$lab['rights'])) : ?>
+                  <!-- manager access -->
+                  <a href="/manager/review">
+                    <span class="material-icons" style='vertical-align: text-bottom;'>contacts</span>
+                    Manager review
+                  </a>
+                  <a href="/manager/employees/review">
+                  <span class="material-icons">supervisor_account</span>
+                    My employess
+                  </a>
+
+                <?php endif; ?>
+                <?php if ($_SESSION['g_mode'] || preg_match('(g)', $lab['rights'])) : ?>
+                  <!-- platform admin access -->
+                  <a href="/platform/manage">
+                    <span class="material-icons" style='vertical-align: text-bottom;'>settings</span>
+                    Platform manage
+                    <?php if ($_SESSION['g_mode'] && !preg_match('(g)', $lab['rights'])) : ?>
+                      <span class='colorRed' title='G Moded user do not have acces rights to open this page.'>[/*\]</span>
+                    <?php endif; ?>
+                  </a>
+                <?php endif; ?>
+              </div>
+            </div>
+          </td>
+        <?php else :
+          // show if user do not have 'm' or 'l' rights
+        ?>
+          <th>
+            <div class='dropdown'>
+              <button onclick="window.open('/', '_self')" class="dropbtn">
+                <span class="material-icons">home</span>
+              </button>
+            </div>
+          </th>
+        <?php endif; ?>
+      </tr>
+      <tr>
+        <th class='header colorBlue' colspan='2'>
+          <?= $page_name ?>
+          <?= ($_SESSION['g_mode']) ? ('<span class="colorRed"><b>[' . $_SESSION['data']['login'] . ']</b></span>') : '' ?>
+        </th>
+      </tr>
+    </thead>
+  </table>
+</article>
+<script>
+    /* When the user clicks on the button,
+    toggle between hiding and showing the dropdown content */
+    function myFunction() {
+    document.getElementById("myDropdown").classList.toggle("show");
+    }
+
+    // Close the dropdown menu if the user clicks outside of it
+    window.onclick = function (event) {
+    if (!event.target.matches('.dropbtn')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+            }
+            }
+        }
+    }
+</script>
