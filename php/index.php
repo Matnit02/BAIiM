@@ -26,7 +26,7 @@ if ($db){
         if (preg_match('(m)', $data['rights'])) {
             $_SERVER['PHP_AUTH_RIGHTS'] = 'MANAGER';
         } else if (preg_match('(l)', $data['rights'])) {
-            $_SERVER['PHP_AUTH_RIGHTS'] = 'ADMINA';
+            $_SERVER['PHP_AUTH_RIGHTS'] = 'ADMIN';
         }
 
         $_SERVER['PHP_AUTH_EID'] = $data['eid'];
@@ -35,9 +35,6 @@ if ($db){
         $uid = generateUniqueID();
         echo "<br />Ukończono zadanie 2!!! <br/> Unique ID: $uid<br />";
     }
-        
-
-
 
     $_SESSION['g_user_eid'] = $data['eid'];
     $_SESSION['data'] = $data;

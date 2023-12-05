@@ -22,6 +22,10 @@ RUN htpasswd -cb /etc/apache2/.htpasswd admin admin && \
     chmod 644 /etc/apache2/.htpasswd
 
 
+RUN mkdir -p /var/www/certificates/1
+RUN mkdir -p /var/www/certificates/2
+RUN rm -f /var/www/certificates/1/1_*
+RUN rm -f /var/www/certificates/2/1_*
 
 WORKDIR /var/www/html
 

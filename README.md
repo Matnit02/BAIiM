@@ -153,7 +153,7 @@ $select_query = $this->db->prepare(
 
 ## Zad 3
 
-### Attak SQL injection.
+### XSS injection.
 
 ## Zad 4
 
@@ -167,7 +167,7 @@ $select_query = $this->db->prepare(
 
 3. Następnie w drugim kursie **prześlij plik podejrzany_plik_pdf.php** (go również znajdziesz w nadrzędnym katalogu projektu)
 
-4. Wyślij i uzupełnij requesta. Możesz to zrobić to w taki sam sposób jak w zadaniu 1.
+4. Wyślij i uzupełnij requesta (koniecznie zaznaczaj przynajmnjiej jeden "room"). Możesz to zrobić to w taki sam sposób jak w zadaniu 1.
 
 5. Otwórz nowe okno przeglądarki w trybie prywatnym i zaloguj się na konto: manager:manager_password.
 
@@ -177,9 +177,7 @@ $select_query = $this->db->prepare(
 
 7. Zatrzymaj się na tabeli reprezentującej dane dotyczące dwóch kursów. Reprezentuje ona wprowadzone przez Ciebie dane.
    Przesłane przez Ciebie pliki można otworzyć za pomocą ikon w ostatnim wierszu tabeli. Po kliknięciu ikony dotyczącej pierwszego kursu powinno
-   rozpocząć się pobieranie pliku. Natomiast kliknięcie ikony dotyczącej kursu "MATLAB Training for Building Access" powinno otworzyć nową kartę.
-   > Plik pobrany w pierwszym kursie nie będzie możliwy do otworzenia. Dostosowując aplikację do laboratorium pominęliśmy część funkcjonalności
-   > niewpływające na wykonanie laboratorium oraz niebędące z nim związane.
+   rozpocząć się pobieranie pliku pdf. Natomiast kliknięcie ikony dotyczącej kursu "MATLAB Training for Building Access" powinno otworzyć nową kartę i wykonać kod php znajdujący się w przesłanym pliku.
 
 ![Tabela z przesłanymi danymi](/img/tabela.png)
 
@@ -192,25 +190,40 @@ echo '<script>alert("Mandarynki i banany')</script>
 
 > Zauważ, że pliki możesz otwierać również za pomocą URL
 
-10. Okazuje się, że Marcin implementując aplikację pozwolił na wykonywanie kodu ukrytego w przesłanych plikach.
+10. Okazuje się, że Maciek implementując aplikację pozwolił na wykonywanie kodu ukrytego w przesłanych plikach.
     Spróbujmy to jakoś wykorzystać.
 
-11. Zajrzyj do [phpinfo](http://localhost:7000/phpinfo) i przejrzyj go.
+11. Zajrzyj do [phpinfo](http://localhost:7000/phpinfo) i przejrzyj go. Jeśli nie wiesz czym jest phpinfo odzwiedz [manulal](https://www.php.net/manual/en/function.phpinfo.php). Zwróć uwagę, że nawet w komentarzach na tej stronie piszą, usunąć z niej pewne parametry prywatne użytownika (wyszykaj "$\_SERVER['AUTH_USER']"), zauważ że twórca tej strony o tym zapomniał, co wykorzystamy w naszym ataku.
 
     > phpinfo służy do wyświetlania szczegółowych informacji dotyczących konfiguracji i instalacji serwera PHP na danej maszynie.
     > Może zawierać informacje takie jak wersja PHP, konfiguracja serwera, zainstalowane rozszerzenia, etc,
 
-12. Możesz tam zauważyć między innymi zmienne PHP_AUTH_EID.
+12. Możesz tam zauważyć między innymi zmienne PHP_AUTH_PW, PHP_AUTH_USER, PHP_AUTH_RIGHTS, PHP_AUTH_EID. Wyswietlanie prywatnych danych użytkownika w tym jego hasła w plain text jest ogromny zagrożenie bezpieczeństwa i absolutnie nie można pozolic na to w środowisku produkcyjnym!!!
 
-13. Ponownie zmodyfikuj plik 1_2.php, aby wyświetlał wartości **PHP_AUTH_EID** i **PHP_AUTH_RIGHTS**
-    dla managera.
+13. Ponownie zmodyfikuj plik 1_2.php, aby wyświetlał wartości **PHP_AUTH_EID** i **PHP_AUTH_RIGHTS**. Następnie odświerz [strone ceryfikatu](http://localhost:7000/download/cert/2?user=1)
 
-14. Zmień wspomniane wartości na '1' oraz 'MANAGER'
+14. Możnaby wywnioskować, że są to parametry które ustawia serwer przy uwierzytelnianiu, pytanie czy można je wykorzystać aby nasze konto "user1" uzyskało prawa managera? Zmień wspomniane zmienne PHP_AUTH_EID na '1' oraz PHP_AUTH_RIGHTS na 'MANAGER' i uruchom plik na końcie managera.
 
 15. Powinieneś zobaczyć następującą wiadomość
 
 ![Tabela z przesłanymi danymi](/img/zad4_finish.png)
 
-16. Prześlij zdjęcie Twojej wiadomości na UPEL. Sprawdź czy to prawda.
+16. Prześlij zdjęcie Twojej wiadomości na UPEL następnie sprawdź czy user1 uzyskał prawa managera. Jeśli tak to poprawnie udało Ci sie wykonac to zadanie!
 
 > Jeśli na koncie użytkownika nie widzisz przycisku MENU spróbuj otworzyć plik poprzez link: http://localhost:7000/download/cert/2?user=1
+
+## Zad 6
+
+### Dodatkowe wyzwania - (Trudniejsz) Ataki - Zadanie opcjonalene
+
+> Dokumentcaj wykonania poniższych zadan opiera się na opisie słownym i prezentacji kodu który rozwiązuje dane zadanie.
+
+A. Jak pozyskac informacje o o tabelach i ich strukturze w bazie danych posiadają wyłacznie dostęp do konta "user1"?
+
+B. Przeanalizuj działanie funkcjonalności G-MODE - funkconalność pozwala zalogować się na konta innych uzytkowników po wpisaniu odpowiedniego ID użytkownika w formularz. Otwórz prywatne okno przeglądarki i zaloguj się na konto: maciek:maciek_password (koto to posiada prawo "g" kolumna "rights" tabela "access"). Następnie przejź do Menu > "Platform Manage" > User specific settings. Wpisz do forlmularza "User bind varible" wartość 1. Następnie klinij "Start". Od teraz powinnieneś móc być zalogowanym na konto użytkownika "user1". Żeby powrócić do swojego konta kliknij "STOP" w zakładce platform manage. Zadanie polega na tym żeby tak obejść zabezpieczenia aby z konta normalnego użytkownika być wstanie zalogować się na konto administratora.
+
+C. Prześlij do serwera plik certyfikatu (jako plik .php) z konta user1 i następnie wykonaj go po nie przechodząc na inne konta. Wcześniej dało się to zrobić tylko z konta managera lub admina otwierają plik w review żadania użytkwnika. Jak zrobić to gdy nie ma już tej furtki?
+
+D. Zaproponuj rozwiązanie które przyci się na do natychmiastowego nadania Ci uprawnień w momencie kiedy manager lub administrator wejdą na strone twojego requesta (MENU > "Manager review" > rekord użytkownika "User1". > lupa). Ten problem można rozwiazać na wiele sposóbów jednym z rozwiązań może być połaczenie dwórch ataków: XSS i File upload attack.
+
+E. Zauważ, że gdy wysyłasz requesta zaznaczając tylko "Building" 1/2 lub/i 3 (+ zaznaczając do tego jeszcze wymagane pola) requesta musi zeryfikowac tylko administator. Gdy zaznaczysz do tego jezszcze przynajmniej jeden "room" twoje żadanie najpier idzie do managera, a dopiero później do admina (gdy manager zaakceptuje twoje zgłoszenie). Jak obejść tą funkcjonalność i wysłać zgłoszenie zawierające zaznaczone "room" + "building" w taki sposób aby request był wysłany tylko do admina, a nie do managera.

@@ -2,7 +2,7 @@
 // Checking if user use form to sent query to request_form_logic
 if (isset($_POST['submit']) || isset($_POST['save'])) {
 
-    $data['checked_croom2entials'] = false;
+    $data['checked_credentials'] = false;
 
     $data['bid'] = filter_input(INPUT_POST, 'bid', FILTER_SANITIZE_STRING);
 
@@ -32,7 +32,8 @@ if (isset($_POST['submit']) || isset($_POST['save'])) {
         'room4_justification' => filter_input(INPUT_POST, 'room4_justification', FILTER_SANITIZE_STRING),
         'room3_justification' => filter_input(INPUT_POST, 'room3_justification', FILTER_SANITIZE_STRING),
         'room2_justification' => filter_input(INPUT_POST, 'room2_justification', FILTER_SANITIZE_STRING),
-        'room1_justification' => filter_input(INPUT_POST, 'room1_justification', FILTER_SANITIZE_STRING)
+        'room1_justification' => isset($_POST['room1_justification']) ? $_POST['room1_justification'] : '',
+        // filter_input(INPUT_POST, 'room1_justification', FILTER_SANITIZE_STRIPPED)
     ];
     // $data['lab_justification']['room1_justification'] = $_POST['room2_justification'];
 
@@ -49,7 +50,7 @@ if (isset($_POST['submit']) || isset($_POST['save'])) {
                             if ((empty($data['lab_access']['room4']) && !empty($data['lab_justification']['room4_justification'])) || (empty($data['lab_access']['room3']) && !empty($data['lab_justification']['room3_justification'])) || (empty($data['lab_access']['room2']) && !empty($data['lab_justification']['room2_justification'])) || (empty($data['lab_access']['room1']) && !empty($data['lab_justification']['room1_justification']))) {
                                 $_SESSION['request_alert'] = 'You give the justification but do not choose the lab!';
                             } else {
-                                $data['checked_croom2entials'] = true;
+                                $data['checked_credentials'] = true;
                             }
                         }
                     } else {
@@ -68,10 +69,10 @@ if (isset($_POST['submit']) || isset($_POST['save'])) {
     
 
     // Setting status
-    if ($data['checked_croom2entials'] &&  ($is_manager || (empty($data['lab_access']['room4']) && empty($data['lab_access']['room3']) && empty($data['lab_access']['room2']) && empty($data['lab_access']['room1'])))) {
+    if ($data['checked_credentials'] &&  ($is_manager || (empty($data['lab_access']['room4']) && empty($data['lab_access']['room3']) && empty($data['lab_access']['room2']) && empty($data['lab_access']['room1'])))) {
         $status = 5;
 
-    } elseif ($data['checked_croom2entials']) {
+    } elseif ($data['checked_credentials']) {
         // Normal submit
         $status = 2;
 
@@ -126,11 +127,11 @@ if (isset($_POST['submit']) || isset($_POST['save'])) {
 
     $request_user_add->bindValue(':room3_justification', $data['lab_justification']['room3_justification'], PDO::PARAM_STR);
     $request_user_add->bindValue(':room2_justification', $data['lab_justification']['room2_justification'], PDO::PARAM_STR);
-    $request_user_add->bindValue(':room1_justification', $data['lab_justification']['room1_justification'], PDO::PARAM_STR);
+    $request_user_add->bindValue(':room1_justification', $data['lab_justification']['room1_justification']);
     $request_user_add->bindValue(':room4_justification', $data['lab_justification']['room4_justification'], PDO::PARAM_STR);
 
     $request_user_add->execute();
-    if ($data['checked_croom2entials']) {
+    if ($data['checked_credentials']) {
         header("Location: /");
     } else {
         if (isset($_POST['save'])) {

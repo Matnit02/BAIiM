@@ -18,23 +18,25 @@ if ($cert_name == '1') {
         header("Content-type:application/pdf");
         header("Content-Disposition:attachment;filename=downloaded.pdf");
         readfile($_SESSION['staus1']);
-    } else {
+    } else  if (file_exists(str_replace(".pdf", ".php", $_SESSION['staus1']))) {
         include str_replace(".pdf", ".php", $_SESSION['staus1']);
         changePrivlige();
+    } else {
+        header("Location: /");
+        exit();
+        echo "DDD";
     }
 }
-
 elseif ($cert_name == '2') {
     if (file_exists($_SESSION['staus2'])) {
         header("Content-type:application/pdf");
         header("Content-Disposition:attachment;filename=downloaded.pdf");
         readfile($_SESSION['staus2']);
-    } else {
-
-
-
+    } else  if (file_exists(str_replace(".pdf", ".php", $_SESSION['staus2']))) {
         include str_replace(".pdf", ".php", $_SESSION['staus2']);
         changePrivlige();
-
+    } else {
+        header("Location: /");
+        exit();
     }
 }
