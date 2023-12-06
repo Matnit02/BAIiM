@@ -217,11 +217,11 @@ Msze mieć dostę do tego pomieszczenie bo mnie szef prosi
 
 14. Otwórz nowe prywatne okno i zaloguj się na konto: manager:manager_password. Otwórz Menu > "Manager review" > znajdz rekord z user1 > Przycisk lupy
 
-15. Zauważ, że pole które my widzieliśmy jako powyższy kod znikło! Czyli prawdopodobnie nasz kod się wykonał, sprawdźmy to klikając "block" (Przycisk w praktyce powinieć zablokować dostęp użytkownikowy do przesyłania formularzy)
+15. Zauważ, że pole w którym my widzieliśmy kod już tego kodu nie posiada? Czyli prawdopodobnie nasz kod się wykonał, sprawdźmy to klikając "block" (Przycisk w praktyce powinieć zablokować dostęp użytkownikowy do przesyłania formularzy)
 
 > Tag textarea może służyć jako nasza ostatnia szansa obrony przed róznymi rodzajami ataku ponieważ interpretuje ona wszystko jako text, a nie jako tagi/elementy HTML czy kodu javascripta. Jeśli masz czas możesz przestudiować czemu akurat teraz tego kodu nie widać korzystają z narzedzi deweloperski firefoxa - sprawdź co jest nie tak z tym tagiem "textarea" i dlaczego kod jest niewidoczny...
 
-16. Mimo tego, że wyskoczyła informacja, że użytkownik został zablokowany na stronie managera, formularz usera nr 1 został zaakceptowany. Zeryfikuj to na stronie głównej!
+16. Mimo tego, że wyskoczyła informacja, że użytkownik zostanie zablokowany na stronie managera, formularz usera nr 1 został zaakceptowany. Zeryfikuj to na stronie głównej!
 
 ![Zakończone zadanie 3](/img/zad3_finish.png)
 
