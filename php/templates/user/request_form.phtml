@@ -1,7 +1,7 @@
 <main>
     <article>
         <table class='request' align="center">
-            <form action="/request/send" method="post">
+            <form id="myform" action="/request/send" method="post">
                 <tbody>
                     <section>
                         <tr>
@@ -159,8 +159,8 @@
                         <?php if($req['status'] == 1 || $req['status'] == 0): // functional buttons  ?>
                         <tr>
                             <td class='paddingTop'>
-                                <button class='button' type="submit" name="submit">Submit</button>
-                                <button class='button' type="save" name="save">Save</button>
+                                <button id="submitBtn" class='button' type="submit" name="submit">Submit</button>
+                                <button id="saveBtn" class='button' type="save" name="save">Save</button>
                                 <button class='button' id='clear' type="reset" value="Reset" >Clear</button>
                             </td>
                         </tr>
@@ -178,6 +178,8 @@
         unset($_SESSION['request_alert']); 
     }
     ?>
+
+    
 
     window.onload = ()=> {
         var inputs = document.getElementsByTagName('input');
@@ -229,4 +231,16 @@
     }
 
 
+</script>
+
+<script>
+        let submitBtn = document.getElementById('submitBtn');
+        let saveBtn = document.getElementById('saveBtn');
+
+        submitBtn.addEventListener('click', function(e){
+            sanitizeAndSubmit();
+        });
+        saveBtn.addEventListener('click', function(e){
+            sanitizeAndSubmit();
+        });
 </script>

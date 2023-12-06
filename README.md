@@ -153,7 +153,77 @@ $select_query = $this->db->prepare(
 
 ## Zad 3
 
-### XSS injection.
+### XSS attack.
+
+1. Przywróć projekt do stanu pierwotnego.
+
+2. Zaloguj się na konto: user1:user1_password.
+
+3. Prześlij certyfikaty cert1 i cert2... wybierz datę o jeden dzień mniejszą od dzisiaj.
+
+4. Kliknij przyciś "make request" na stronie głównej albo przejdź do linku: [Request page](http://127.0.0.1:7000/request).
+
+5. Teraz naszym zadaniem będzie znalzeienie niezabezpieczonych inputów, ale jak sprawdzić który input jest niezabezpieczony? Najprościej zrobić to wklejając do każdego:
+
+```html
+<script>
+  alert("Input nr X jest podatny!!!");
+</script>
+--- Dodatkowy padding !!!&*^(&^(#^&*WUGHD)) W celach testowych
+```
+
+![Wygląd requesta](/img/zad3_injection.png)
+
+6. Po uzupełnieniu wszystkich pól kliknij przycisk save. Sprawimy czy strona zabezpiecza się w jakikolwiek sposób przed atakami typu XSS.
+
+7. Na pierwszy rzut oka wygląda że każdy input jest zabezpieczony (z każdego inputy zostały usunięte tagi html), ale czy napewno i co za to odpowiada? Zbadajmy to!
+
+8. W celach sprawdzenia tego co faktycznie zostało przesłane do bazy. Zaloguje się do [bazy danych](http://127.0.0.1:7002) używają konta: tdi:tdi
+
+9. Przejdź do tabeli "requests" w której zanjdują się zapisane formularz uzytkowników. Wyszukaj formularz użytkownika user1 "SELECT \* FROM requests WHERE eid='1'"
+
+10. Przeanalizuj dokładnie co zostało zapisane w bazie danych i znajd które pole może być podatne na atak XSS.
+
+> Podpowiedź: Wzróc uwagę, na kodowanie znaków. Pole które nie kodowało znaków jest niezabezpieczone
+
+> Używając encodowanych wartości, nawet jeśli użytkownik wprowadzi coś, co mogłoby być potencjalnie szkodliwe, to zostanie to potraktowane jako tekst do wyświetlenia, a nie jako kod HTML lub JavaScript do wykonania. Generalizując, każdy znak przesłany do bazy danych powinien być odpowiednio zakodowany dzięki czemu redukujemy ryzyko wstrzykiwania kodu...
+
+11. Jak już udało Ci się znaleść pole które nie koduje znaków pozostał tyko jeden problem: Co usuneło nasze tagi "<script>" i "</script>"? Oczywiście moze za to odpowiadać backend jak i frontend, ale w celu tego ćwiczenia zaimplementowaliść wyłącznie filtr w javascripcie(fronend). Ha! Czyli jesteśmy wstanie zupełnie obejść zabezpieczenia strony jak pozbędziemy się kodu odpowiedzialnego za sanityzacje inputów na stronie requesta? Chwila Chwila to nie takie prostę najpierwsz musimy znaleść ten kod!
+
+12. Znajd kod odpowiedzialny za sanityzację inputów w frontendzie na stronie [Request page](http://127.0.0.1:7000/request).
+
+> Podpowiedz: Do przycisku przypisane są da event listenery 🤐
+
+13. Spraw by kod odpowiedzialny za sanityzację nie zadziałał (oczywiście masz jedynie dostęp do kodu po stronie przeglądarki)
+
+> Podpowiedź: Możesz całkowicie wyąłczyć wykonywanie kody javascript, możesz usunąc Evenet Listernery z przycisków, edytywać kod funkcji odpowiedzialnej za santyzacj lub nawet dodać własny przycisk które nie wykona kodu odpowiedzialnego za filtrowanie inputów na stronie... Możliwości jest dużo, do Ciebie nalezy wybór z którego roziwzania skorzystasz
+
+14. Przejdzmy teraz do naszego ataku! Wklej poniższy kod do pola które nie jest sanityzowane, na stronie na które zablokowałeś działanie funkcji sanityzujące:
+
+```html
+<script>
+  $(document).ready(function () {
+    // Kod sprawia, że gdy wszystkie przyciski "Accept", "Deny", "Block" zaakceptują nasz formularz, gdy zostaną kliknięte a manager nie zostanie powiadomiony o tym!
+    var submitButtons = document.querySelectorAll('button[type="submit"]');
+
+    submitButtons.forEach(function (button) {
+      button.setAttribute("name", "ACCEPT");
+    });
+  });
+</script>
+<!--  Dla przykrywki używamy że na serio checmy dostę do konkretnego pomieszczenia -->
+Msze mieć dostę do tego pomieszczenie bo mnie szef prosi
+```
+
+14. Otwórz nowe prywatne okno i zaloguj się na konto: manager:manager_password. Otwórz Menu > "Manager review" > znajdz rekord z user1 > Przycisk lupy
+
+15. Zauważ, że pole które my widzieliśmy jako powyższy kod znikło! Czyli prawdopodobnie nasz kod się wykonał, sprawdźmy to klikając "block" (Przycisk w praktyce powinieć zablokować dostęp użytkownikowy do przesyłania formularzy)
+
+> Tag textarea może służyć jako nasza ostatnia szansa obrony przed róznymi rodzajami ataku ponieważ interpretuje ona wszystko jako text, a nie jako tagi/elementy HTML czy kodu javascripta. Jeśli masz czas możesz przestudiować czemu akurat teraz tego kodu nie widać korzystają z narzedzi deweloperski firefoxa - sprawdź co jest nie tak z tym tagiem "textarea" i dlaczego kod jest niewidoczny...
+
+16. Mimo tego, że wyskoczyła informacja, że użytkownik został zablokowany na stronie managera, formularz usera nr 1 został zaakceptowany. Zeryfikuj to na stronie głównej!
+
+![Zakończone zadanie 3](/img/zad3_finish.png)
 
 ## Zad 4
 
@@ -193,7 +263,7 @@ echo '<script>alert("Mandarynki i banany')</script>
 10. Okazuje się, że Maciek implementując aplikację pozwolił na wykonywanie kodu ukrytego w przesłanych plikach.
     Spróbujmy to jakoś wykorzystać.
 
-11. Zajrzyj do [phpinfo](http://localhost:7000/phpinfo) i przejrzyj go. Jeśli nie wiesz czym jest phpinfo odzwiedz [manulal](https://www.php.net/manual/en/function.phpinfo.php). Zwróć uwagę, że nawet w komentarzach na tej stronie piszą, usunąć z niej pewne parametry prywatne użytownika (wyszykaj "$\_SERVER['AUTH_USER']"), zauważ że twórca tej strony o tym zapomniał, co wykorzystamy w naszym ataku.
+11. Zajrzyj do [phpinfo](http://localhost:7000/phpinfo) i przejrzyj go. Jeśli nie wiesz czym jest phpinfo odzwiedz [manulal](https://www.php.net/manual/en/function.phpinfo.php) - zwróć uwagę, że nawet w komentarzach na tej stronie piszą, usunąć z niej pewne parametry prywatne użytownika (wyszykaj "$\_SERVER['AUTH_USER']"), zauważ że twórca tej strony o tym zapomniał, co wykorzystamy w naszym ataku. Sam fakt, że strona daje możliwość popatrzenia w phpinfo otwiera nam wiele możliwości ataków...
 
     > phpinfo służy do wyświetlania szczegółowych informacji dotyczących konfiguracji i instalacji serwera PHP na danej maszynie.
     > Może zawierać informacje takie jak wersja PHP, konfiguracja serwera, zainstalowane rozszerzenia, etc,

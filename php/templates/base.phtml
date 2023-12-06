@@ -30,13 +30,19 @@
                 font-size: 20px;
             }
             body {
-            padding: 0;
-            margin: 0;
-            font-size: 18px;
-            background-color:  #eee;
+                padding: 0;
+                margin: 0;
+                font-size: 18px;
+                background-color:  #eee;
+            }
+            .fake-textarea {
+                -moz-appearance: textfield;
+                -webkit-appearance: textfield;
+                font: -moz-field;
+                font: -webkit-small-control;
             }
 
-            textarea {
+            .textarea, textarea {
                 margin-bottom:1em;
                 width: 100%;
                 height: 150px;
@@ -381,6 +387,19 @@
         </style>
         <!-- JQUERY DIALOG BOX -->
         <script>
+            function sanitizeAndSubmit() {
+                var textareas = document.querySelectorAll('textarea');
+                for (var i = 0; i < textareas.length; i++) {
+                    var textareaValue = textareas[i].value;
+                    var sanitizedValue = textareaValue.replace(/<[^>]*>/g, '');
+                    textareas[i].value = sanitizedValue;
+    
+                    console.log(sanitizedValue)
+                }
+            }
+    
+
+
             $(function () {
                 $.fn.msgpopup = function( options ){
 

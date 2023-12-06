@@ -227,6 +227,15 @@
 
               <?php elseif ($req['status'] == 5) : ?>
                 <p class='colorYellow'>
+                  <?php 
+                  
+                  if ($req['accept_manager_name'] === 'DONE ACCEPT'){
+                    $uid = generateUniqueID();
+                    echo "GRATULACJE!<br> UDAŁO CI SIE ROZIWĄZAĆ ZADANIE 3 (ATAK XSS)<br>Unique ID: $uid<br>";
+                  }
+                  
+                  ?>
+
                   Your request is awaiting verification by admin.
                 </p>
                 <button class="button" onclick="window.open('/request', '_self')">

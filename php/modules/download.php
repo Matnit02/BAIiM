@@ -24,7 +24,6 @@ if ($cert_name == '1') {
     } else {
         header("Location: /");
         exit();
-        echo "DDD";
     }
 }
 elseif ($cert_name == '2') {
