@@ -4,7 +4,6 @@ import requests
 
 # ZMIENIAJ TYLKO TO:
 path = "tajny_plik.html"
-path = "/../var/www/conf/conf.json"
 ########
 
 upload_url = f'http://127.0.0.1:7000/upload?file={path}'

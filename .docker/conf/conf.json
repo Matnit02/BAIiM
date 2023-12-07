@@ -1,4 +1,22 @@
 {
-    "link1": "http://layer.uci.agh.edu.pl/Z.Szklarski/",
-    "link2": "http://programowanie.orzechowski.it/lab1.html"
+    "link1": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "link2": "https://ch.mathworks.com/help/matlab/ref/filter.html#buagwwg-2",
+    "randomData": {
+        "randomSid": 42,
+        "randomString": "yxtsyiuxtsgJKXYwdOmnni",
+        "bannedWords": [
+            "maciek",
+            "jola",
+            "pomarancza"
+        ],
+        "hashSid": {
+            "_ies23": "a56xdjhcgaqsjkxgwdkcgy3kg",
+            "_ies6": "jisj83#YE#&*EhkLhlkshdjkh"
+        }
+    },
+    "dynamicData": {
+        "currentTimestamp": "<?php echo time(); ?>",
+        "randomFromServer": "<?php echo rand(); ?>",
+        "serverInfo": "<?php echo php_uname(); ?>"
+    }
 }
