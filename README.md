@@ -180,7 +180,7 @@ $select_query = $this->db->prepare(
 --- Dodatkowy padding !!!&*^(&^(#^&*WUGHD)) W celach testowych
 ```
 
-![Wygląd requesta](/img/zad3_injection.png)
+![Wygląd requesta](/img/zad3_injection.PNG)
 
 6. Po uzupełnieniu wszystkich pól kliknij przycisk save. Sprawimy czy strona zabezpiecza się w jakikolwiek sposób przed atakami typu XSS.
 
