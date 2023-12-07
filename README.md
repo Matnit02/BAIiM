@@ -204,7 +204,9 @@ $select_query = $this->db->prepare(
 
 13. Spraw by kod odpowiedzialny za sanityzację nie zadziałał (oczywiście masz jedynie dostęp do kodu po stronie przeglądarki)
 
-> Podpowiedź: Możesz całkowicie wyąłczyć wykonywanie kody javascript, możesz usunąc Evenet Listernery z przycisków, edytywać kod funkcji odpowiedzialnej za santyzacj lub nawet dodać własny przycisk które nie wykona kodu odpowiedzialnego za filtrowanie inputów na stronie... Możliwości jest dużo, do Ciebie nalezy wybór z którego roziwzania skorzystasz
+> Podpowiedź: Możesz całkowicie wyąłczyć wykonywanie kody javascript, możesz usunąć Evenet Listernery z przycisków, edytywać kod funkcji odpowiedzialnej
+> za sanityzację lub nawet dodać własny przycisk, który nie wykona kodu odpowiedzialnego za filtrowanie inputów na stronie...
+> Możliwości jest dużo, do Ciebie należy wybór z którego rozwiązania skorzystasz.
 
 14. Przejdzmy teraz do naszego ataku! Wklej poniższy kod do pola które nie jest sanityzowane, na stronie na które zablokowałeś działanie funkcji sanityzujące:
 
@@ -263,7 +265,7 @@ Msze mieć dostę do tego pomieszczenie bo mnie szef prosi
    prostą instrukcję alert z js i odśwież stronę.
 
 ```
-echo '<script>alert("Mandarynki i banany')</script>
+echo '<script>alert("Mandarynki i banany")</script>';
 ```
 
 > Zauważ, że pliki możesz otwierać również za pomocą URL
