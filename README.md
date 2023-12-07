@@ -130,6 +130,8 @@ Czy po wstępnym przeanalizowaniu projektu udało Ci się zauważyć jakieś pod
 
 > Na dobry początek spróbuj wykonać "SELECT \* FROM access;" - oczywiście musisz do tego dopisac coś jeszcze :DD
 
+5. Wykonaj zapytanie SELECT bazując na kodzie poniżej
+
 ```php
 $select_query = $this->db->prepare(
     'SELECT access.name FROM requests
@@ -145,9 +147,9 @@ $select_query = $this->db->prepare(
 
 ![Funkcja debug](/img/debug_zad2.png)
 
-5. Jak już uda Ci się wymyśleć w jaki sposób wysyłać zapytania do bazydanych to spróbuj usunąć tabele "access" z bazy danych ("DROP TABLE access;"). Po usunięciu tej tabeli i odświerzeniu strony powininneś zobaczyć następujący efekt:
+6. Jak już uda Ci się wymyśleć w jaki sposób wysyłać zapytania do bazydanych to spróbuj usunąć tabele "access" z bazy danych ("DROP TABLE access;"). Po usunięciu tej tabeli i odświerzeniu strony powininneś zobaczyć następujący efekt:
 
-6. Prześlij screen z przeprowadzonego ataku na upela wraz z linkiem zawierającym wstrzykniety kod SQL
+7. Prześlij screen z przeprowadzonego ataku na upela wraz z linkiem zawierającym wstrzykniety kod SQL
 
 ![Poprawne wykonanie zadania 2](/img/finish2.png)
 
