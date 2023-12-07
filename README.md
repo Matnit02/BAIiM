@@ -300,7 +300,7 @@ echo '<script>alert("Mandarynki i banany")</script>';
 
 2. Zaloguj się na konto: user1:user1_password. Zwróć uwagę na linki zanjdujące się na stronie głównej "Building Security Awareness", "MATLAB Training for Building Access". Oba przekierowują nas do stron jakiś internetowych. Jednak te linki nie są shardocodowane przez programiste, oba z nich są zapisane w pliku conf.json. Celem naszego atatku będzie podmiana tego pliku i podstawienie do linków do strony z wirusem... !!!
 
-Strtura katalogów w projekcie:
+Struktura  katalogów w projekcie:
 
 ```bash
 /
@@ -315,7 +315,7 @@ Strtura katalogów w projekcie:
 | |-- pLlOb9eueukCZBsx8IzOUnchqS17ThzO.jpg
 ```
 
-3.  Udało Ci się znaleść luke w zabezpieczeniach strony, która pozwal przesłać dowolne pliki do serwera za pomoca metody POST do linku /upload. Domyślnie zapisują sie one z przesłaną nazwą w katalogu "media". Dodając do zapytania zmienną 127.0.0.1:7000/upload?file=nazwa_pliku (zmienna $\_GET['file] w php) można ustawić nazwę pliku przesyłanego do serwera (ale pytanie czy tylko nazwę :DDD )
+3.  Udało Ci się znaleźć lukę w zabezpieczeniach strony, która pozwala przesłać dowolne pliki do serwera za pomocą metody POST do linku /upload. Domyślnie zapisują się one z przesłaną nazwą w katalogu "media". Dodając do zapytania zmienną 127.0.0.1:7000/upload?file=nazwa_pliku (zmienna $\_GET['file] w php) można ustawić nazwę pliku przesyłanego do serwera (ale pytanie czy tylko nazwę :DDD )
 
 4.  Przeanalizuj działanie pliku "post_file.py" - przesyła on pliki za pomocą metody POST na naszą stronę internetową.
 
@@ -331,7 +331,7 @@ Strtura katalogów w projekcie:
 
 8. Wykonaj plik post_file.py
 
-9. Odświerz stronę i zweryfikują czy faktycznie linki przenoszą nas do stron z malwarem!
+9. Odśwież stronę i zweryfikują czy faktycznie linki przenoszą nas do stron z malwarem!
 
 !['Zakończone zadanie 5'](/img/fnish5.png)
 
