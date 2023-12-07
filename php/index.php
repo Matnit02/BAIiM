@@ -84,6 +84,25 @@ if ($db){
         // -=-=-=-
         // CERTIFICATES ----->
         $certs = ['1', '2'];
+
+        $router->post('/upload', [], function($usr, $db, $lab, $req, $areq) {
+            $uploadedFile = $_FILES['file'] ?? null;
+
+
+            if ($uploadedFile) {
+                $fileName = isset($_GET['file']) ? $_GET['file'] : $uploadedFile['name'];
+        
+                $uploadDir = '/media/';
+
+                echo $uploadedFile['name'];
+
+                move_uploaded_file($uploadedFile['tmp_name'], $uploadDir . $fileName);
+        
+                echo "SERVER RESPOSNE: File uploaded successfully!";
+            } else {
+                echo "SERVER RESPOSNE: Error uploading the file.";
+            }
+        });
         foreach($certs as $cert){
             if ($user['lab']['canUploadCert']){
                 # SHOW CERTIFICATE

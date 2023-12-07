@@ -39,6 +39,8 @@ services:
       - ./.docker/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
       - ./php/:/var/www/html
       - ./.docker/certificates:/var/www/certificates
+      - ./.docker/conf:/var/www/conf
+      - ./.docker/media:/media/
     ports:
       - 7000:80
 

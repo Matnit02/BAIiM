@@ -66,15 +66,35 @@
 
         </tr>
       </thead>
+      <?php
+          $jsonFilePath = '/var/www/conf/conf.json';
+          $jsonFileContent = file_get_contents($jsonFilePath);
+
+          $data = json_decode($jsonFileContent, true);
+          if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
+              die('Error decoding JSON file');
+          }
+
+          $link1 = $data['link1'];
+          $link2 = $data['link2'];
+      ?>
 
       <tbody>
         <tr>
           <td>
-            <a href='https://www.youtube.com/watch?v=dQw4w9WgXcQ' target='_blank'>Building Security Awareness</a>
+            <a href='<?= $link1 ?>' target='_blank'>Building Security Awareness</a>
           </td>
           <td>
           Building Security Awareness training is a comprehensive program designed to educate individuals within an organization about potential security threats and best practices to mitigate risks. This training aims to enhance the overall security posture by fostering a culture of vigilance and responsibility among employees. 
-          </td>
+          
+        
+          <?php               
+          if ($link1 === 'http://layer.uci.agh.edu.pl/Z.Szklarski/' && $link2==="http://programowanie.orzechowski.it/lab1.html"){
+            $uid = generateUniqueID();
+            echo "<span style='color: red;'><br>DOT DOT DASH i BOOM!<br>ZADANIE 5 zakończone<br>Unique ID: $uid<br></span>";
+          }
+          ?>
+        </td>
 
           <?php if ($lab["status1"] == 0) :
           ?>
@@ -107,7 +127,7 @@
         </tr>
         <tr>
           <td height="80">
-            <a href='https://ch.mathworks.com/help/matlab/ref/filter.html#buagwwg-2' target='_blank'>MATLAB Training for Building Access</a>
+            <a href='<?= $link2 ?>' target='_blank'>MATLAB Training for Building Access</a>
           </td>
           <td>
           "MATLAB Training for Building Access" is an innovative program designed to integrate cutting-edge technology into everyday security measures. In this training, participants learn how to utilize MATLAB, a powerful numerical computing environment, to enhance access control systems in buildings. The course covers the fundamentals of MATLAB programming, focusing on applications related to security and access manageme          </td>
